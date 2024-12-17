@@ -29,6 +29,7 @@ export default function Income() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
 
+  console.log(categories);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -72,6 +73,7 @@ export default function Income() {
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
+          console.log(error);
         } else {
           setError("An unexpected error occurred");
         }

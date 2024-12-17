@@ -9,7 +9,7 @@ import { columns } from "./columns";
 import { DataTable } from "@/components/data-table";
 
 // Define el tipo Income
-type Expense = {
+type Transaction = {
   id: string;
   amount: number;
   description: string;
@@ -17,8 +17,8 @@ type Expense = {
   created_at: string;
   actions: string;
 };
-export default function IndexPage() {
-  const [expense, setExpense] = useState<Expense[]>([]);
+export default function Transaction() {
+  const [transaction, setExpense] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
@@ -35,11 +35,13 @@ export default function IndexPage() {
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
+          console.log(error);
         } else {
           setError("An unexpected error occurred");
         }
       } finally {
         setIsLoading(false);
+        console.log(isLoading);
       }
     };
 
@@ -57,7 +59,7 @@ export default function IndexPage() {
           />
         }
       >
-        <DataTable columns={columns} data={expense} />
+        <DataTable columns={columns} data={transaction} />
       </React.Suspense>
     </Shell>
   );
