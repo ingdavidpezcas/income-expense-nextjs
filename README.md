@@ -1,30 +1,34 @@
-Income-Expense Tracker
+# Income-Expense Web app
 
 Este proyecto es una aplicación web para gestionar ingresos y egresos desarrollado con Next.js.
 
-Instalación
+## Installation
 
 Clonar el repositorio:
 
+```sh
 git clone https://github.com/ingdavidpezcas/income-expense-nextjs.git
+```
+
+```sh
 cd income-expense-nextjs
+```
 
 Instalar dependencias:
 
+```sh
 npm install
+```
 
 Iniciar el servidor de desarrollo:
 
+```sh
 npm run dev
+```
 
-Scripts principales
+### License
 
-npm run dev: Inicia el servidor de desarrollo.
+MIT
 
-npm run build: Construye el proyecto para producción.
-
-npm run start: Inicia el servidor en modo producción.
-
-Contacto
-
+**Contacto**
 GitHub: @ingdavidpezcas
