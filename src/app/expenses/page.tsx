@@ -55,7 +55,7 @@ export default function Expenses() {
   }, [error, isLoading]);
 
   return (
-    <div className="flex flex-1 flex-col gap-2 p-4">
+    <div className="flex flex-1 flex-col gap-2 p-0 py-2">
       <Shell className="gap-2 pb-4 pt-0 md:py-0">
         <div className="container mx-auto pb-1">
           <div className="flex items-center justify-between gap-2">
@@ -63,13 +63,16 @@ export default function Expenses() {
               <h1 className="text-2xl">Expense</h1>
               <p className="truncate"></p>
             </div>
-            <div className="flex">
+            <div className="flex items-center justify-end gap-2">
               <AddExpense />
-              <Button className="px-4 py-2 text-xs h-8">
+              <Button className="px-8 py-2 rounded-xl text-xs h-10 button_inc_exp_secondary">
                 <Download />
                 Donwload
               </Button>
-              <Button className="px-4 py-2 text-xs h-8" variant="secondary">
+              <Button
+                className="px-8 py-2 rounded-xl text-xs h-10 button_inc_exp_primary"
+                variant="secondary"
+              >
                 Add Income
               </Button>
             </div>

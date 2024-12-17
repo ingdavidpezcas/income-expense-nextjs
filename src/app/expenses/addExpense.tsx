@@ -2,8 +2,21 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { FilePenLine, Calendar as CalendarIcon } from "lucide-react";
+import {
+  FilePenLine,
+  CircleCheck,
+  Calendar as CalendarIcon,
+} from "lucide-react";
 import { format } from "date-fns";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import {
   Dialog,
@@ -18,7 +31,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
+import {} from "@/components/ui/toast";
 
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
@@ -42,7 +55,6 @@ export default function AddExpense() {
     description: "",
     amount: 0,
     id_category: 0,
-    type: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -90,7 +102,17 @@ export default function AddExpense() {
     e.preventDefault();
 
     if (expense.id_category === null || expense.id_category === 0) {
-      alert("Por favor, selecciona una categoría.");
+      toast({
+        className: "bg-red-600 text-gray-50 p-4",
+        action: (
+          <div className="w-full flex items-center ">
+            <CircleCheck className="mr-2 text-gray-50" />
+            <span className="first-letter:capitalize text-gray-50">
+              Por favor, selecciona una categoría.
+            </span>
+          </div>
+        ),
+      });
       return;
     }
 
@@ -117,14 +139,19 @@ export default function AddExpense() {
       const result = await response.json();
       console.log("Data submitted successfully:", result);
       toast({
-        title: "Hurry!",
-        description: "Expense Add",
-        action: <ToastAction altText="Try again">Expense</ToastAction>,
-        className: "bg-black text-black gradient-dev",
+        className: "bg-gray-900 text-green-500",
+        action: (
+          <div className="w-full flex items-center ">
+            <CircleCheck className="mr-2 text-green-500" />
+            <span className="first-letter:capitalize text-green-500">
+              successfully updated
+            </span>
+          </div>
+        ),
       });
 
       // Limpiar los campos del formulario después del envío exitoso
-      setExpense({ description: "", amount: 0, id_category: 0, type: "" });
+      setExpense({ description: "", amount: 0, id_category: 0 });
       // Cerrar el modal
       setIsOpen(false);
     } catch (err) {
@@ -144,7 +171,9 @@ export default function AddExpense() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
-          className="px-4 py-2 text-xs h-8"
+          className="inline-flex items-center justify-center whitespace-nowrap font-medium transition-colors focus-visible:outline-none 
+          focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border 
+          border-input bg-slate-100 hover:bg-accent hover:text-accent-foreground h-10 rounded-xl px-8 py-2 text-xs"
           variant="outline"
           onClick={() => setIsOpen(true)}
         >
@@ -152,7 +181,7 @@ export default function AddExpense() {
           Add Expense
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="p-10 sm:max-w-[625px]">
         <DialogHeader>
           <DialogTitle>Add Expense</DialogTitle>
           <DialogDescription>
@@ -161,8 +190,8 @@ export default function AddExpense() {
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
-            <div className="sm:col-span-3">
-              <Label htmlFor="description" className="text-right">
+            <div className="flex flex-col sm:col-span-3">
+              <Label htmlFor="description" className="text-left mb-4">
                 Description
               </Label>
               <Textarea
@@ -174,11 +203,32 @@ export default function AddExpense() {
                 required
               />
             </div>
-            <div className="sm:col-span-3">
-              <Label htmlFor="amount" className="text-right">
+            <div className="flex flex-col sm:col-span-3">
+              <Label htmlFor="amount" className="text-left mb-4">
                 Amount
               </Label>
-              <Input
+
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="currency">
+                  Enter the amount in your local currency
+                </Label>
+                <div className="relative">
+                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-sm text-gray-500 dark:text-gray-400">
+                    COP &nbsp;
+                  </span>
+                  <Input
+                    id="amount"
+                    type="number"
+                    name="amount"
+                    className="pl-12"
+                    value={expense.amount}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/*    <Input
                 id="amount"
                 className="col-span-3"
                 type="number"
@@ -187,13 +237,43 @@ export default function AddExpense() {
                 onChange={handleChange}
                 required
                 min="0"
-              />
+              /> */}
             </div>
-            <div className="sm:col-span-3">
-              <Label htmlFor="amount" className="text-right">
+            <div className="flex flex-col sm:col-span-3">
+              <Label htmlFor="amount" className="text-left mb-4">
                 Category
               </Label>
-              <select
+
+              <Select
+                onValueChange={(value) =>
+                  setExpense({
+                    ...expense,
+                    id_category: value ? Number(value) : 0, // Use 0 or any other default number instead of null
+                  })
+                }
+                value={expense.id_category?.toString() ?? ""}
+              >
+                <SelectTrigger id="id_category" className="w-full">
+                  <SelectValue placeholder="Selecciona una categoría" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Categories</SelectLabel>
+                    <SelectItem value="0">Selecciona una categoría</SelectItem>
+                    {Array.isArray(categories) &&
+                      categories.map((category) => (
+                        <SelectItem
+                          key={category.id_category}
+                          value={category.id_category.toString()}
+                        >
+                          {category.name_category}
+                        </SelectItem>
+                      ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              {/*    <select
                 id="id_category"
                 className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 value={expense.id_category ?? ""}
@@ -214,7 +294,7 @@ export default function AddExpense() {
                       {category.name_category}
                     </option>
                   ))}
-              </select>
+              </select> */}
             </div>
             <div className="grid-cols-4 items-center gap-4">
               <Popover>
@@ -244,7 +324,7 @@ export default function AddExpense() {
           <DialogFooter>
             {error && <p>{error}</p>}
             <Button
-              className="px-4 py-2 text-xs h-8"
+              className="px-4 py-2 text-xs h-10 rounded-xl"
               type="submit"
               disabled={isSubmitting}
             >
