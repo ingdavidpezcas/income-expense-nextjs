@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export type Transaction = {
-  id: number;
+  id: string;
   amount: number;
   description: string;
   created_at: string;

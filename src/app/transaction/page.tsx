@@ -9,14 +9,16 @@ import { columns } from "./columns";
 import { DataTable } from "@/components/data-table";
 
 // Define el tipo Income
-type Transaction = {
+export type Transaction = {
   id: string;
   amount: number;
   description: string;
-  id_category: number;
   created_at: string;
-  actions: string;
+  updated_at: string;
+  type: "income" | "expense";
+  id_category?: number | null;
 };
+
 export default function Transaction() {
   const [transaction, setExpense] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,13 +37,11 @@ export default function Transaction() {
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
-          console.log(error);
         } else {
           setError("An unexpected error occurred");
         }
       } finally {
         setIsLoading(false);
-        console.log(isLoading);
       }
     };
 

@@ -60,11 +60,12 @@ export default function Income() {
         // Mapea los nombres de categorías a los datos de income
         const incomeWithCategoryNames = incomeData.map((item: Income) => {
           const category = categoriesData.find(
-            (category) => category.id_category === Number(item.id_category)
+            (category: Category) =>
+              category.id_category === Number(item.id_category)
           );
           return {
             ...item,
-            name_category: category ? category.name_category : "Unknown", // Si no encuentra categoría, pone "Unknown"
+            name_category: category ? category.name_category : "Unknown",
           };
         });
 
@@ -73,7 +74,6 @@ export default function Income() {
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
-          console.log(error);
         } else {
           setError("An unexpected error occurred");
         }
