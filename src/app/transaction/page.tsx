@@ -1,10 +1,7 @@
 "use client";
-import * as React from "react";
-
+import React, { useEffect, useState, Suspense } from "react";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { Shell } from "@/components/shell";
-
-import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "@/components/data-table";
 
@@ -19,7 +16,7 @@ export type Transaction = {
   id_category?: number | null;
 };
 
-export default function Transaction() {
+function TransactionPage() {
   const [transaction, setExpense] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -62,5 +59,13 @@ export default function Transaction() {
         <DataTable columns={columns} data={transaction} />
       </React.Suspense>
     </Shell>
+  );
+}
+
+export default function Transaction() {
+  return (
+    <Suspense fallback={<div>Loading page...</div>}>
+      <TransactionPage />
+    </Suspense>
   );
 }

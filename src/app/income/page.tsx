@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { columns } from "./columns";
 import { DataTable } from "@/components/data-table";
 import AddIncome from "./addIncome";
@@ -24,7 +23,7 @@ type Category = {
   name_category: string;
 };
 
-export default function Income() {
+function IncomePage() {
   const [income, setIncome] = useState<Income[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -119,5 +118,13 @@ export default function Income() {
       {/* Muestra la tabla solo cuando los datos se han cargado */}
       <DataTable columns={columns} data={income} />
     </div>
+  );
+}
+
+export default function Income() {
+  return (
+    <Suspense fallback={<div>Loading page...</div>}>
+      <IncomePage />
+    </Suspense>
   );
 }

@@ -1,9 +1,7 @@
 "use client";
-
+import React, { useEffect, useState, Suspense } from "react";
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import { useEffect, useState } from "react";
-
 import {
   Card,
   CardContent,
@@ -60,7 +58,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function Dashboard() {
+function DashboardPage() {
   const [expenseData, setExpenseData] = useState<ExpenseData | null>(null);
   const [incomeData, setIncomeData] = useState<IncomeData | null>(null);
   const [transactionData, settransactionData] =
@@ -507,5 +505,13 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={<div>Loading page...</div>}>
+      <DashboardPage />
+    </Suspense>
   );
 }

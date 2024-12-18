@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { columns } from "./columns";
 import { DataTable } from "@/components/data-table";
 import { Download } from "lucide-react";
@@ -19,7 +18,7 @@ type Expense = {
   actions: string;
 };
 
-export default function Expenses() {
+function ExpensesPage() {
   const [expense, setExpense] = useState<Expense[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -93,5 +92,13 @@ export default function Expenses() {
         </React.Suspense>
       </Shell>
     </div>
+  );
+}
+
+export default function Expenses() {
+  return (
+    <Suspense fallback={<div>Loading page...</div>}>
+      <ExpensesPage />
+    </Suspense>
   );
 }
