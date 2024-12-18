@@ -34,11 +34,11 @@ const geistMono = localFont({
 export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const segments = pathname.split("/").filter((item) => item !== "");
-  const capitalize = (str: string) =>
-    `${str.charAt(0).toUpperCase()}${str.slice(1)}`;
 
-  const myArray: string[] = segments;
-  const resultado = myArray[0];
+  const capitalize = (str: string) =>
+    str ? `${str.charAt(0).toUpperCase()}${str.slice(1)}` : "";
+
+  const pageTitle = segments.length > 0 ? capitalize(segments[0]) : "Inicio";
 
   return (
     <>
@@ -58,16 +58,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     <Breadcrumb>
                       <BreadcrumbList>
                         <BreadcrumbItem className="hidden md:block text-xs">
-                          <BreadcrumbLink className="text-xs" href="#">
+                          <BreadcrumbLink className="text-xs" href="/">
                             Dashboard
                           </BreadcrumbLink>
                         </BreadcrumbItem>
-                        <BreadcrumbSeparator className="hidden md:block" />
-                        <BreadcrumbItem className="text-xs">
-                          <BreadcrumbPage>{`${capitalize(
-                            resultado
-                          )}`}</BreadcrumbPage>
-                        </BreadcrumbItem>
+                        {segments.length > 0 && (
+                          <>
+                            <BreadcrumbSeparator className="hidden md:block" />
+                            <BreadcrumbItem className="text-xs">
+                              <BreadcrumbPage>{pageTitle}</BreadcrumbPage>
+                            </BreadcrumbItem>
+                          </>
+                        )}
                       </BreadcrumbList>
                     </Breadcrumb>
                   </div>
