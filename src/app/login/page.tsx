@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -14,9 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import client from "../api/login";
+import { authenticate } from "../../api/login";
 
-export function LoginForm() {
+function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -26,14 +26,13 @@ export function LoginForm() {
     e.preventDefault();
 
     try {
-      const response = await client.authenticate({
-        strategy: "local",
-        email,
-        password,
-      });
+      const response = await authenticate(email, password);
 
       if (response.accessToken) {
-        localStorage.setItem("accessToken", response.accessToken);
+        // Only access localStorage on the client side
+        if (typeof window !== "undefined") {
+          localStorage.setItem("accessToken", response.accessToken);
+        }
         router.push("/dashboard");
       } else {
         setError("Token no recibido");
@@ -46,13 +45,6 @@ export function LoginForm() {
       }
     }
   };
-
-  // Asegúrate de que la redirección ocurra solo en el cliente
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Aquí se asegura de que el código solo se ejecute en el cliente
-    }
-  }, []);
 
   return (
     <Card className="mx-auto max-w-sm">
@@ -118,5 +110,13 @@ export function LoginForm() {
         </form>
       </CardContent>
     </Card>
+  );
+}
+
+export default function LoginForm() {
+  return (
+    <Suspense fallback={<div>Loading page...</div>}>
+      <LoginPage />
+    </Suspense>
   );
 }

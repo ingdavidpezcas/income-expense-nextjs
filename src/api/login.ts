@@ -6,17 +6,41 @@ import axios from "axios";
 // Dirección del servidor FeathersJS
 const API_URL = "http://localhost:3030";
 
+let client: Application | null = null;
 // Inicializa el cliente Feathers sin necesidad de definir servicios para autenticación
-const client: Application = feathers();
+export function getClient(): Application {
+  if (client) return client;
 
-// Configura el cliente REST usando Axios
-client.configure(rest(API_URL).axios(axios));
+  client = feathers();
 
-// Configura la autenticación (esto no necesita ser un servicio)
-client.configure(
-  authentication({
-    storage: window.localStorage, // Puedes usar localStorage o cualquier otro mecanismo de almacenamiento
-  })
-);
+  if (typeof window !== "undefined") {
+    // Client-side initialization
+    client.configure(rest(API_URL).axios(axios));
+    client.configure(
+      authentication({
+        storage: window.localStorage,
+      })
+    );
+  } else {
+    // Server-side initialization
+    client.configure(rest(API_URL).axios(axios));
+    // Note: Server-side authentication might need a different approach
+  }
 
-export default client;
+  return client;
+}
+
+export async function authenticate(email: string, password: string) {
+  const client = getClient();
+  try {
+    const response = await client.authenticate({
+      strategy: "local",
+      email,
+      password,
+    });
+    return response;
+  } catch (error) {
+    console.error("Authentication error:", error);
+    throw error;
+  }
+}
